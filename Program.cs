@@ -6,7 +6,9 @@ namespace CPE400FinalProject
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Sensors sensors = new Sensors();
+            sensors.SensorNetwork.Add("Test");
+            Console.WriteLine(sensors.SensorNetwork[0]);
         }
     }
 }
