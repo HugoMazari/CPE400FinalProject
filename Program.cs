@@ -45,6 +45,22 @@ namespace CPE400FinalProject
                 sensorsGraph[nextDoorNeighborIndex].NeighborSensors.Add(personalName);
             }
 
+            for (int i = 0 ; i < numberOfSensors; i++)
+            {
+                int neighborNumber = randomNumGen.Next(3, 4);
+                for (int j = 0; j < neighborNumber; j++)
+                {
+                    int randomNeighbor = randomNumGen.Next(1, numberOfSensors);
+                    List<string> neighbors = sensorsGraph[i].NeighborSensors;
+                    string neighborName = string.Format(sensorNamingConvention, randomNeighbor);
+                    if (!neighbors.Contains(neighborName))
+                    {
+                        sensorsGraph[i].addNeighbor(neighborName);
+                        string source = string.Format(sensorNamingConvention, i);
+                        sensorsGraph[randomNeighbor].addNeighbor(source);
+                    }
+                }
+            }
             return sensorsGraph;
         }
     }

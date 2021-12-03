@@ -11,7 +11,12 @@ namespace CPE400FinalProject
         ///<summary>
         /// Gets and sets the list of neighboring sensors.
         ///</summary>
-        public List<string> NeighborSensors { get; set; }
+        public List<string> NeighborSensors { get; }
+
+        public void addNeighbor(string neighborName)
+        {
+            this.NeighborSensors.Add(neighborName);
+        }
 
         ///<summary>
         /// Gets and sets the energy of the sensor.
