@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CPE400FinalProject
 {
@@ -57,7 +58,7 @@ namespace CPE400FinalProject
             return sensorsGraph;
         }
 
-        private bool IsConnected(List<Sensors> sensorGraph)
+        private bool[] IsConnected(List<Sensors> sensorGraph)
         {
             bool[] isVisited = new bool[numberOfSensors];
             for(int i = 0; i < numberOfSensors; i++)
@@ -65,7 +66,11 @@ namespace CPE400FinalProject
                 isVisited[i] = false;
             }
 
-
+            for(int i = 0; i < numberOfSensors; i++)
+            {
+                isVisited[i] = sensorGraph[i].NeighborSensors.Any();
+            }
+            return isVisited;
         }
 
         /// <summary>
