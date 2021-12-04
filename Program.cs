@@ -8,11 +8,17 @@ namespace CPE400FinalProject
     ///</summary>
     class Program
     {
+        #region Private Members
+
         private int numberOfSensors = 7;
         private string sensorNamingConvention = "Sensor #{0}";
 
+        #endregion
+
+        #region Methods
+
         ///<summary>
-        /// The main function.
+        /// The program's entry function.
         ///</summary>
         static void Main(string[] args)
         {
@@ -30,52 +36,37 @@ namespace CPE400FinalProject
             List<Sensors> sensorsGraph = new List<Sensors>();
             Random randomNumGen = new Random();
 
+            //Creates the sensors in  the graph and assigns initial energy level.
             for (int i = 0; i < numberOfSensors; i++)
             {
                 int initialEnergy = randomNumGen.Next(5, 50) * 100;
                 string newSensorName = string.Format(sensorNamingConvention, i);
                 sensorsGraph.Add(new Sensors(newSensorName, initialEnergy));
-                sensorsGraph[i].NeighborSensors.Add(newSensorName);
+                sensorsGraph[i].AddNeighbor(newSensorName);
             }
 
-            for (int i = 0 ; i < numberOfSensors; i++)
+            //Randomly generates paths between sensors until graph is fully connected.
+            while(!SensorGraph.IsConnected(sensorsGraph))
             {
-                int neighborNumber = randomNumGen.Next(3, 4);
-                for (int j = 0; j < neighborNumber; j++)
+                Sensors [] randomSensors = new Sensors[2];
+                //Randomly picks two sensors to connect with a path.
+                for(int i = 0; i < 2; i++)
                 {
-                    int randomNeighbor = randomNumGen.Next(1, numberOfSensors);
-                    List<string> neighbors = sensorsGraph[i].NeighborSensors;
-                    string neighborName = string.Format(sensorNamingConvention, randomNeighbor);
-                    if (!neighbors.Contains(neighborName))
-                    {
-                        sensorsGraph[i].addNeighbor(neighborName);
-                        string source = string.Format(sensorNamingConvention, i);
-                        sensorsGraph[randomNeighbor].addNeighbor(source);
-                    }
+                    int randomSensorsIndex = randomNumGen.Next(0,numberOfSensors);
+                    randomSensors[i] = sensorsGraph[randomSensorsIndex];
+                }
+
+                // Checks random path has not been selected before.
+                if(!randomSensors[0].NeighborSensors.Contains(randomSensors[1].Name))
+                {
+                    randomSensors[0].AddNeighbor(randomSensors[1].Name);
+                    randomSensors[1].AddNeighbor(randomSensors[0].Name);
                 }
             }
+
             return sensorsGraph;
         }
-
-        private bool IsConnected(List<Sensors> sensorGraph)
-        {
-            bool[] isVisited = new bool[numberOfSensors];
-            for(int i = 0; i < numberOfSensors; i++)
-            {
-                isVisited[i] = false;
-            }
-
-
-        }
-
-        /// <summary>
-        /// Checks what sensors a specific sensor neighbors.
-        /// </summary>
-        /// <param name="sensor">Sensor being checked.</param>
-        /// <param name="isVisited">Array checking a sensors neighbor.</param>
-        private void CheckNeighbors(Sensors sensor, out bool[] isVisited)
-        {
-
-        }
+        
+        #endregion
     }
 }
