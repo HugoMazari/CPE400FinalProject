@@ -21,7 +21,10 @@ namespace CPE400FinalProject
             Console.WriteLine("Test");
         }
 
-        
+        /// <summary>
+        /// Creates a graph based on the available number of nodes.
+        /// </summary>
+        /// <returns>Randomly created graph.</returns>
         private List<Sensors> createGraph()
         {
             List<Sensors> sensorsGraph = new List<Sensors>();
@@ -33,16 +36,6 @@ namespace CPE400FinalProject
                 string newSensorName = string.Format(sensorNamingConvention, i);
                 sensorsGraph.Add(new Sensors(newSensorName, initialEnergy));
                 sensorsGraph[i].NeighborSensors.Add(newSensorName);
-            }
-
-            //Makes a loop with nodes, remove and generate completely random graph.
-            for (int i = 0; i < numberOfSensors - 1; i++)
-            {
-                int nextDoorNeighborIndex = i + 1;
-                string nextDoorNeighborName = string.Format(sensorNamingConvention, nextDoorNeighborIndex);
-                string personalName = string.Format(sensorNamingConvention, i);
-                sensorsGraph[i].NeighborSensors.Add(nextDoorNeighborName);
-                sensorsGraph[nextDoorNeighborIndex].NeighborSensors.Add(personalName);
             }
 
             for (int i = 0 ; i < numberOfSensors; i++)
@@ -62,6 +55,27 @@ namespace CPE400FinalProject
                 }
             }
             return sensorsGraph;
+        }
+
+        private bool IsConnected(List<Sensors> sensorGraph)
+        {
+            bool[] isVisited = new bool[numberOfSensors];
+            for(int i = 0; i < numberOfSensors; i++)
+            {
+                isVisited[i] = false;
+            }
+
+
+        }
+
+        /// <summary>
+        /// Checks what sensors a specific sensor neighbors.
+        /// </summary>
+        /// <param name="sensor">Sensor being checked.</param>
+        /// <param name="isVisited">Array checking a sensors neighbor.</param>
+        private void CheckNeighbors(Sensors sensor, out bool[] isVisited)
+        {
+
         }
     }
 }
