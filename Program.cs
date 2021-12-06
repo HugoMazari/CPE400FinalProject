@@ -56,39 +56,14 @@ namespace CPE400FinalProject
                     int randomSensorsIndex = randomNumGen.Next(0,numberOfSensors);
                     randomSensors[i] = sensorsGraph[randomSensorsIndex];
                 }
-
-        private bool[] IsConnected(List<Sensors> sensorGraph)
-        {
-            bool[] isVisited = new bool[numberOfSensors];
-            for(int i = 0; i < numberOfSensors; i++)
-            {
-                isVisited[i] = false;
-            }
-
-            for(int i = 0; i < numberOfSensors; i++)
-            {
-                isVisited[i] = sensorGraph[i].NeighborSensors.Any();
-            }
-            return isVisited;
-        }
-
-        /// <summary>
-        /// Checks what sensors a specific sensor neighbors.
-        /// </summary>
-        /// <param name="sensor">Sensor being checked.</param>
-        /// <param name="isVisited">Array checking a sensors neighbor.</param>
-        private void CheckNeighbors(Sensors sensor, out bool[] isVisited)
-        {
-
                 // Checks random path has not been selected before.
                 if(!randomSensors[0].NeighborSensors.Contains(randomSensors[1].Name))
                 {
                     randomSensors[0].AddNeighbor(randomSensors[1].Name);
                     randomSensors[1].AddNeighbor(randomSensors[0].Name);
                 }
-            }
-
             return sensorsGraph;
+            }
         }
         
         #endregion
