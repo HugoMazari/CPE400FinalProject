@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CPE400FinalProject
 {
-    public class SensorGraph
+    public class NodeGraph
     {
         #region Properties
 
@@ -19,12 +19,12 @@ namespace CPE400FinalProject
         /// <summary>
         /// The class constructor.
         /// </summary>
-        /// <param name="amountOfSensors">The amount of sensors in the graph.</param>
+        /// <param name="amountOfNodes">The amount of sensors in the graph.</param>
         /// <param name="defaultState">The desired default state of the IsVisited graph, defaults to false.</param>
-        public SensorGraph(int amountOfSensors, bool defaultState = false)
+        public NodeGraph(int amountOfNodes, bool defaultState = false)
         {
-            IsVisited = new bool[amountOfSensors];
-            for (int i = 0; i < amountOfSensors; i++)
+            IsVisited = new bool[amountOfNodes];
+            for (int i = 0; i < amountOfNodes; i++)
             {
                 IsVisited[i] = false;
             }
@@ -35,9 +35,9 @@ namespace CPE400FinalProject
         /// </summary>
         /// <param name="sensorGraph">The sensor graph.</param>
         /// <returns>If the graph is fully connected.</returns>
-        public static bool IsConnected(List<Sensors> sensorGraph)
+        public static bool IsConnected(List<Node> sensorGraph)
         {
-            SensorGraph connectionTest = new SensorGraph(sensorGraph.Count, false);
+            NodeGraph connectionTest = new NodeGraph(sensorGraph.Count, false);
             connectionTest.CheckNeighbors(sensorGraph, 0);
             bool isConnected = true;
 
@@ -54,17 +54,17 @@ namespace CPE400FinalProject
         /// </summary>
         /// <param name="sensorGraph">The graph of sensors.</param>
         /// <param name="index">The index of the selected sensor.</param>
-        public void CheckNeighbors(List<Sensors> sensorGraph, int index)
+        public void CheckNeighbors(List<Node> sensorGraph, int index)
         {
             //Marks sensor as visited.
             IsVisited[index] = true;
             
             //Checks all neighbors of selected sensor.
-            foreach(string sensorName in sensorGraph[index].NeighborSensors)
+            foreach(string sensorName in sensorGraph[index].NeighborNodes)
             {
                 int sensorNameIndex = default;
                 //Gets the index of current neighbor sensor.
-                foreach(Sensors sensor in sensorGraph)
+                foreach(Node sensor in sensorGraph)
                 {
                     if(sensor.Name == sensorName)
                     {

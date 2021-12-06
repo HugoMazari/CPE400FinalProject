@@ -6,14 +6,14 @@ namespace CPE400FinalProject
     ///<summary>
     /// The sensor class.
     ///</summary>
-    public class Sensors
+    public class Node
     {
         #region Properties
 
         ///<summary>
         /// Gets and sets the list of neighboring sensors.
         ///</summary>
-        public List<string> NeighborSensors { get; }
+        public List<string> NeighborNodes { get; }
 
         ///<summary>
         /// Gets and sets the energy of the sensor.
@@ -34,9 +34,9 @@ namespace CPE400FinalProject
         ///</summary>
         ///<param name="name"> The name of the sensor. </param>
         ///<param name="energy"> The energy of the sensor. </param>
-        public Sensors(string name, int energy)
+        public Node(string name, int energy)
         {
-            NeighborSensors = new List<string>();
+            NeighborNodes = new List<string>();
             Name = name;
             Energy = energy;
         }
@@ -47,7 +47,7 @@ namespace CPE400FinalProject
         /// <param name="neighborName">The name of the neighboring sensor.</param>
         public void AddNeighbor(string neighborName)
         {
-            NeighborSensors.Add(neighborName);
+            NeighborNodes.Add(neighborName);
         }
 
         #endregion
