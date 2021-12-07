@@ -8,7 +8,7 @@ namespace CPE400FinalProject
         #region Properties
 
         /// <summary>
-        /// Gets the array of which sensors are visited.
+        /// Gets the array of which nodes are visited.
         /// </summary>
         public bool[] IsVisited {get; private set;}
 
@@ -19,7 +19,7 @@ namespace CPE400FinalProject
         /// <summary>
         /// The class constructor.
         /// </summary>
-        /// <param name="amountOfNodes">The amount of sensors in the graph.</param>
+        /// <param name="amountOfNodes">The amount of nodes in the graph.</param>
         /// <param name="defaultState">The desired default state of the IsVisited graph, defaults to false.</param>
         public NodeGraph(int amountOfNodes, bool defaultState = false)
         {
@@ -31,14 +31,14 @@ namespace CPE400FinalProject
         }
 
         /// <summary>
-        /// Checks if a graph of sensors is fully connected.
+        /// Checks if a graph of nodes is fully connected.
         /// </summary>
-        /// <param name="sensorGraph">The sensor graph.</param>
+        /// <param name="nodeGraph">The node graph.</param>
         /// <returns>If the graph is fully connected.</returns>
-        public static bool IsConnected(List<Node> sensorGraph)
+        public static bool IsConnected(List<Node> nodeGraph)
         {
-            NodeGraph connectionTest = new NodeGraph(sensorGraph.Count, false);
-            connectionTest.CheckNeighbors(sensorGraph, 0);
+            NodeGraph connectionTest = new NodeGraph(nodeGraph.Count, false);
+            connectionTest.CheckNeighbors(nodeGraph, 0);
             bool isConnected = true;
 
             foreach(bool connection in connectionTest.IsVisited)
@@ -50,37 +50,95 @@ namespace CPE400FinalProject
         }
 
         /// <summary>
-        /// Checks what sensors each sensor is connected too.
+        /// Checks what nodes each node is connected too.
         /// </summary>
-        /// <param name="sensorGraph">The graph of sensors.</param>
-        /// <param name="index">The index of the selected sensor.</param>
-        public void CheckNeighbors(List<Node> sensorGraph, int index)
+        /// <param name="nodeGraph">The graph of nodes.</param>
+        /// <param name="index">The index of the selected node.</param>
+        public void CheckNeighbors(List<Node> nodeGraph, int index)
         {
-            //Marks sensor as visited.
+            //Marks node as visited.
             IsVisited[index] = true;
             
-            //Checks all neighbors of selected sensor.
-            foreach(string sensorName in sensorGraph[index].NeighborNodes)
+            //Checks all neighbors of selected node.
+            foreach(string nodeName in nodeGraph[index].NeighborNodes)
             {
-                int sensorNameIndex = default;
-                //Gets the index of current neighbor sensor.
-                foreach(Node sensor in sensorGraph)
+                int nodeNameIndex = default;
+                //Gets the index of current neighbor node.
+                foreach(Node node in nodeGraph)
                 {
-                    if(sensor.Name == sensorName)
+                    if(node.Name == nodeName)
                     {
-                        sensorNameIndex = sensorGraph.IndexOf(sensor);
+                        nodeNameIndex = nodeGraph.IndexOf(node);
                         break;
                     }
                 }
 
                 // If it has not been marked as visited, mark it as such and check it's neighbors.
-                if(!IsVisited[sensorNameIndex])
+                if(!IsVisited[nodeNameIndex])
                 {
-                    CheckNeighbors(sensorGraph, sensorNameIndex);
+                    CheckNeighbors(nodeGraph, nodeNameIndex);
                 }
             }
         }
 
+        /// <summary>
+        /// Finds all unique paths from the source to destination nodes. 
+        /// </summary>
+        /// <param name="nodeGraph">The graph of nodes.</param>
+        /// <param name="srcSensor">The source node.</param>
+        /// <param name="destSensor">The destination node.</param>
+        /// <returns>List of all possible paths.</returns>
+        public static List<NodePath> FindAllPaths(List<Node> nodeGraph, Node srcSensor, Node destSensor)
+        {
+            List<NodePath> allPaths = new List<NodePath>();
+            NodeGraph pathFinder = new NodeGraph(1);
+            NodePath startPath = new NodePath();
+            startPath.NodesInPath.Add(srcSensor.Name);
+            pathFinder.FindNode(nodeGraph, srcSensor, destSensor, allPaths, startPath);
+            return allPaths;
+            
+        }
+
+    /// <summary>
+    /// Find desired node in graph. 
+    /// </summary>
+    /// <param name="nodeGraph">The graph of nodes.</param>
+    /// <param name="srcSensor">The node to start the search in.</param>
+    /// <param name="destSensor">The target node.</param>
+    /// <param name="allPaths">List of all possible paths to take.</param>
+    /// <param name="currPath">The current path being checked.</param>
+        private void FindNode(List<Node> nodeGraph, Node srcSensor, Node destSensor, List<NodePath> allPaths, NodePath currPath)
+        {
+            foreach (var neighbor in srcSensor.NeighborNodes)
+            {
+                if(neighbor == destSensor.Name)
+                {
+                    NodePath temp = new NodePath();
+                    foreach (var nodes in currPath.NodesInPath)
+                    {
+                        temp.NodesInPath.Add(nodes);
+                    }
+                    temp.CalculateEnergy(nodeGraph);
+                    allPaths.Add(temp);
+                }
+                else if (!currPath.NodesInPath.Contains(neighbor))
+                {
+                    Node neighborNode = null;
+                    foreach (var node in nodeGraph)
+                    {
+                        if(node.Name == neighbor)
+                        {
+                            neighborNode = node;
+                            break;
+                        }
+                    }
+                    
+                    currPath.NodesInPath.Add(neighbor);
+                    FindNode(nodeGraph, neighborNode, destSensor, allPaths, currPath);
+                    currPath.NodesInPath.Remove(neighbor);
+                }
+            }
+        }
         #endregion
     }
 }
