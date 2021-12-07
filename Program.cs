@@ -40,8 +40,9 @@ namespace CPE400FinalProject
             //Packet sending loop
             while(lowestNodeEnergy > 0)
             {
+                bool networkOffline = false;
                 numberOfPackets++;
-                path = programFunctions.UnamedAlgo(nodesGraph);
+                path = programFunctions.AshAlgo(nodesGraph);
 
                 foreach(var nodeName in path)
                 {
@@ -59,15 +60,37 @@ namespace CPE400FinalProject
                     {
                         node.Energy -= Node.TransmissionCost;
                     }
+
+                    if(node.Energy <= 0)
+                    {
+                        node.Energy = 0;
+                        if(!networkOffline)
+                        {
+                            networkOffline = true;
+                        }
+                    }
                 }
 
                 //Determine the lowest node energy.
                 lowestNodeEnergy = programFunctions.LowestNodeEnergy(nodesGraph);
+                Console.WriteLine("Sending Packet #{0}", numberOfPackets);
+                Console.WriteLine("Source Node: {0}\nDestination Node: {1}", path[0], path[path.Count - 1]);
+                Console.Write("Path: {0}", path[0]);
+                for(int i = 1; i < path.Count; i++)
+                    Console.Write(" -> {0}", path[i]);
+                Console.WriteLine();
+                if(networkOffline)
+                {
+                    Console.WriteLine("ENERGY DEPLETED! DELIVERY FAILED!");
+                    numberOfPackets--;
+                }
+                Console.WriteLine("Values\n--------------\n");
+                programFunctions.DisplayValues(nodesGraph);
+                Console.WriteLine("////////////////////////////////////////////////////////");
             }
             
             //Final values
-            Console.WriteLine("////////////////////////////////////////////////////////");
-            Console.WriteLine("Total Number of Packets Sent: {0}\n", numberOfPackets);
+            Console.WriteLine("Total Number of Packets Successfully Sent: {0}\n", numberOfPackets);
             Console.WriteLine("Final Values\n--------------\n");
             programFunctions.DisplayValues(nodesGraph);
         }
@@ -108,6 +131,11 @@ namespace CPE400FinalProject
             }
         }
 
+        /// <summary>
+        /// Finds the node with the least amount of energy.
+        /// </summary>
+        /// <param name="nodesGraph">The graph of nodes.</param>
+        /// <returns>The node with the least amount of energy.</returns>
         private int LowestNodeEnergy(List<Node> nodesGraph)
         {
             // Max amount of energy.
@@ -159,7 +187,12 @@ namespace CPE400FinalProject
             return nodesGraph;
         }
 
-        private List<string> UnamedAlgo(List<Node> nodeGraph)
+        /// <summary>
+        /// Finds all paths from source to destination and determines the one with the least amount of energy consumption.
+        /// </summary>
+        /// <param name="nodeGraph">The graph of nodes.</param>
+        /// <returns>The graph that consumes the least power.</returns>
+        private List<string> AshAlgo(List<Node> nodeGraph)
         {
             //Variables
             List<NodePath> allPaths = new List<NodePath>();
@@ -179,7 +212,7 @@ namespace CPE400FinalProject
             //Find all paths
             allPaths = NodeGraph.FindAllPaths(nodeGraph, nodeGraph[startAndEndNode[0]], nodeGraph[startAndEndNode[1]]);
 
-            //Choose path with shortest percentage.
+            //Choose path with the smallest percentage difference.
             foreach(var path in allPaths)
             {
                 if(smallestPath == null)
@@ -188,8 +221,10 @@ namespace CPE400FinalProject
                 }
                 else
                 {
-                    double currSmallestPercentDiff = smallestPath.EneryConsumptionPercentage - smallestPath.LowestEnergyConsumption;
-                    double pathSmallestPercentDiff = path.EneryConsumptionPercentage - path.LowestEnergyConsumption;
+                    //Measures current path's percentage difference between average energy consumption percentage and the consumption
+                    //percentage of the node with the smallest energy reserve.
+                    double currSmallestPercentDiff = smallestPath.EnergyConsumptionPercentage - smallestPath.LowestEnergyConsumption;
+                    double pathSmallestPercentDiff = path.EnergyConsumptionPercentage - path.LowestEnergyConsumption;
                     if(currSmallestPercentDiff > pathSmallestPercentDiff)
                     {
                         smallestPath = path;

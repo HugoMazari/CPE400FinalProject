@@ -99,14 +99,14 @@ namespace CPE400FinalProject
             
         }
 
-    /// <summary>
-    /// Find desired node in graph. 
-    /// </summary>
-    /// <param name="nodeGraph">The graph of nodes.</param>
-    /// <param name="srcSensor">The node to start the search in.</param>
-    /// <param name="destSensor">The target node.</param>
-    /// <param name="allPaths">List of all possible paths to take.</param>
-    /// <param name="currPath">The current path being checked.</param>
+        /// <summary>
+        /// Find desired node in graph. 
+        /// </summary>
+        /// <param name="nodeGraph">The graph of nodes.</param>
+        /// <param name="srcSensor">The node to start the search in.</param>
+        /// <param name="destSensor">The target node.</param>
+        /// <param name="allPaths">List of all possible paths to take.</param>
+        /// <param name="currPath">The current path being checked.</param>
         private void FindNode(List<Node> nodeGraph, Node srcSensor, Node destSensor, List<NodePath> allPaths, NodePath currPath)
         {
             foreach (var neighbor in srcSensor.NeighborNodes)
