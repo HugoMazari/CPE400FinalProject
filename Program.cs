@@ -93,6 +93,9 @@ namespace CPE400FinalProject
             Console.WriteLine("Total Number of Packets Successfully Sent: {0}\n", numberOfPackets);
             Console.WriteLine("Final Values\n--------------\n");
             programFunctions.DisplayValues(nodesGraph);
+
+            Console.WriteLine("\n\nPress any key to close application.");
+            Console.ReadKey();
         }
 
         /// <summary>
